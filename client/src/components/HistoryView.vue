@@ -27,15 +27,31 @@
 
     <div v-if="showPicker" class="quick-jump-panel">
       <div class="picker-row">
-        <select v-model="pickYear" class="picker-select">
-          <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}年</option>
-        </select>
-        <select v-model="pickMonth" class="picker-select">
-          <option v-for="m in 12" :key="m" :value="m">{{ m }}月</option>
-        </select>
+        <div class="picker-field">
+          <label class="picker-label">年份</label>
+          <input
+            type="number"
+            v-model.number="pickYear"
+            class="picker-input"
+            min="1900"
+            max="2100"
+            @keydown.enter="jumpTo"
+          />
+        </div>
+        <div class="picker-field">
+          <label class="picker-label">月份</label>
+          <select v-model.number="pickMonth" class="picker-select">
+            <option v-for="m in 12" :key="m" :value="m">{{ m }}月</option>
+          </select>
+        </div>
         <button class="jump-btn" @click="jumpTo">跳转</button>
       </div>
-      <button class="today-btn" @click="goToday">📅 回到今天所在月份</button>
+      <div class="quick-btns">
+        <button v-if="earliestYear" class="quick-btn" @click="goEarliest">
+          🏛️ 最早记录 ({{ earliestYear }}年)
+        </button>
+        <button class="quick-btn" @click="goToday">📅 回到今天所在月份</button>
+      </div>
     </div>
 
     <div class="calendar-grid">
@@ -91,10 +107,11 @@ import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
   history: Object,
-  loading: Boolean
+  loading: Boolean,
+  earliestYear: Number
 })
 
-const emit = defineEmits(['prev-month', 'next-month', 'jump-to-month', 'go-today'])
+const emit = defineEmits(['prev-month', 'next-month', 'jump-to-month', 'go-today', 'go-earliest'])
 
 const weekdays = ['日', '一', '二', '三', '四', '五', '六']
 const selectedDay = ref(null)
@@ -103,15 +120,6 @@ const showPicker = ref(false)
 const now = new Date()
 const pickYear = ref(now.getFullYear())
 const pickMonth = ref(now.getMonth() + 1)
-
-const yearOptions = computed(() => {
-  const cur = new Date().getFullYear()
-  const years = []
-  for (let y = cur; y >= cur - 10; y--) {
-    years.push(y)
-  }
-  return years
-})
 
 function togglePicker() {
   showPicker.value = !showPicker.value
@@ -122,12 +130,20 @@ function togglePicker() {
 }
 
 function jumpTo() {
+  if (!pickYear.value || pickYear.value < 1900 || pickYear.value > 2100) return
   emit('jump-to-month', { year: pickYear.value, month: pickMonth.value })
   showPicker.value = false
 }
 
 function goToday() {
   emit('go-today')
+  showPicker.value = false
+}
+
+function goEarliest() {
+  if (props.earliestYear) {
+    emit('go-earliest')
+  }
   showPicker.value = false
 }
 

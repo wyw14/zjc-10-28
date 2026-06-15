@@ -234,8 +234,41 @@ body {
 
 .picker-row {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.picker-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.picker-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #718096;
+}
+
+.picker-input {
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4a5568;
+  background: white;
+  width: 110px;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.picker-input:focus {
+  outline: none;
+  border-color: #764ba2;
+  box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
 }
 
 .picker-select {
@@ -249,6 +282,7 @@ body {
   cursor: pointer;
   transition: border-color 0.2s ease;
   appearance: auto;
+  min-width: 100px;
 }
 
 .picker-select:focus {
@@ -258,7 +292,7 @@ body {
 }
 
 .jump-btn {
-  padding: 8px 20px;
+  padding: 10px 24px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -268,6 +302,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(118, 75, 162, 0.3);
+  height: fit-content;
 }
 
 .jump-btn:hover {
@@ -275,19 +310,26 @@ body {
   box-shadow: 0 4px 12px rgba(118, 75, 162, 0.4);
 }
 
-.today-btn {
-  padding: 8px 20px;
+.quick-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quick-btn {
+  padding: 8px 18px;
   background: white;
   color: #764ba2;
   border: 2px solid #764ba2;
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.today-btn:hover {
+.quick-btn:hover {
   background: #764ba2;
   color: white;
   transform: translateY(-1px);

@@ -35,10 +35,12 @@
       v-else-if="currentTab === 'history'"
       :history="history"
       :loading="historyLoading"
+      :earliest-year="earliestYear"
       @prev-month="prevMonth"
       @next-month="nextMonth"
       @jump-to-month="jumpToMonth"
       @go-today="goToday"
+      @go-earliest="goEarliest"
     />
 
     <div v-if="toast.show" class="toast" :class="{ error: toast.isError }">
@@ -58,6 +60,7 @@ const submitting = ref(false)
 const todayData = ref(null)
 const history = ref(null)
 const historyLoading = ref(false)
+const earliestYear = ref(null)
 
 const toast = reactive({
   show: false,
@@ -123,6 +126,9 @@ async function loadHistory() {
     const json = await res.json()
     if (json.success) {
       history.value = json.data
+      if (json.data.earliestYear) {
+        earliestYear.value = json.data.earliestYear
+      }
     }
   } catch (e) {
     showToast('加载历史失败', true)
@@ -162,6 +168,14 @@ function goToday() {
   viewYear.value = now.getFullYear()
   viewMonth.value = now.getMonth() + 1
   loadHistory()
+}
+
+function goEarliest() {
+  if (earliestYear.value) {
+    viewYear.value = earliestYear.value
+    viewMonth.value = 1
+    loadHistory()
+  }
 }
 
 onMounted(() => {

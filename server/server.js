@@ -181,8 +181,10 @@ app.get('/api/history', (req, res) => {
     let answeredCount = 0;
     let missedCount = 0;
     const allDates = Object.keys(data.answers).sort();
+    let earliestYear = null;
     if (allDates.length > 0) {
       const firstDate = new Date(allDates[0]);
+      earliestYear = firstDate.getFullYear();
       const today = new Date();
       const todayStr = getDateString(today);
       let cursor = new Date(firstDate);
@@ -211,7 +213,8 @@ app.get('/api/history', (req, res) => {
           missedCount,
           totalDays: answeredCount + missedCount
         },
-        allAnswers: data.answers
+        allAnswers: data.answers,
+        earliestYear
       }
     });
   } catch (err) {
